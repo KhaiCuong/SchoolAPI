@@ -7,8 +7,8 @@ namespace WebAPI.Repository
     {
         Task<IEnumerable<SubjectModels>>  GetSubjects();
         Task<SubjectModels> GetSubjectById(string id);
-        Task<SubjectModels> AddSubject(SubjectModels subject);
-        Task<SubjectModels> UpdateSubject(SubjectModels subject);
+        Task<SubjectModels> AddSubject(SubjectModels subject, IFormFile photo);
+        Task<SubjectModels> UpdateSubject(SubjectModels subject, IFormFile photo);
         Task<bool> DeleteSubject(string id);
 
         Task<IEnumerable<Course>> GetCourse();

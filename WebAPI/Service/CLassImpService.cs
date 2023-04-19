@@ -13,17 +13,31 @@ namespace WebAPI.Service
     public class CLassImpService : IClassRepository
     {   
         private DatabaseContext _dbContext;
-        public CLassImpService(DatabaseContext context)
+        private readonly string _uploadFolder;
+
+        public CLassImpService(DatabaseContext context, IWebHostEnvironment webHostEnvironment)
         {
            _dbContext = context;
+            _uploadFolder = Path.Combine(webHostEnvironment.ContentRootPath, "uploads");
         }
 
-        public async Task<ClassModel> AddClassModel(ClassModel classmodel)
+        public async Task<ClassModel> AddClassModel(ClassModel classmodel, IFormFile photo)
         {
             var Class = _dbContext.Classes.SingleOrDefault(a => a.Class_Id.Equals(classmodel.Class_Id));
             if (Class == null)
             {
-                
+                if (photo != null && photo.Length > 0)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                    string filePath = Path.Combine(_uploadFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await photo.CopyToAsync(stream);
+                    }
+
+                    classmodel.img = "/uploads/" + fileName;
+                }
                 await _dbContext.Classes.AddAsync(classmodel);
                 await _dbContext.SaveChangesAsync();
                 return Class;
@@ -36,9 +50,17 @@ namespace WebAPI.Service
 
         public async Task<bool> DeleteClassModel(string Class_Id)
         {
-            var cl = _dbContext.Classes.FindAsync(Class_Id);
+            ClassModel cl = await _dbContext.Classes.FindAsync(Class_Id);
             if (cl != null)
             {
+                if (!string.IsNullOrEmpty(cl.img))
+                {
+                    string filePath = Path.Combine(_uploadFolder, cl.img);
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
                 _dbContext.Remove(cl);
                 await _dbContext.SaveChangesAsync();
                 return true;
@@ -64,21 +86,43 @@ namespace WebAPI.Service
 
         }
 
-        public async Task<ClassModel> UpdateClassModel(ClassModel updateClass)
+        public async Task<ClassModel> UpdateClassModel(ClassModel updateClass, IFormFile photo)
         {
             ClassModel cl = await _dbContext.Classes.FindAsync(updateClass.Class_Id);
-            if (cl != null)
+
+            if (photo != null && photo.Length > 0)
             {
-                
+                if (!string.IsNullOrEmpty(cl.img))
+                {
+                    string filePathUpdate = Path.Combine(_uploadFolder, cl.img);
+                    if (File.Exists(filePathUpdate))
+                    {
+                        File.Delete(filePathUpdate);
+                    }
+                }
+                // generate new unique file name 
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                string filePath = Path.Combine(_uploadFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                updateClass.img = "/uploads/" + fileName;
+
                 _dbContext.Entry(updateClass).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
 
-                return cl;
+                return updateClass;
             }
             else
             {
-                return null;
+                updateClass.img = cl.img;
+                _dbContext.Entry(updateClass).State = EntityState.Modified;
 
+                await _dbContext.SaveChangesAsync();
+                return updateClass;
             }
         }
     }

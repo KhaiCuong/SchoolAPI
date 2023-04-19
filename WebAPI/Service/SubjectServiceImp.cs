@@ -9,18 +9,33 @@ namespace WebAPI.Service
     public class SubjectServiceImp : ISubjectRepository
     {
         private DatabaseContext _dbContext;
-        public SubjectServiceImp(DatabaseContext databaseContext)
+        private readonly string _uploadFolder;
+        public SubjectServiceImp(DatabaseContext databaseContext, IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = databaseContext;
+            _uploadFolder = Path.Combine(webHostEnvironment.ContentRootPath, "uploads");
+
         }
 
 
         //SUBJECT
-        public async Task<SubjectModels> AddSubject(SubjectModels subject)
+        public async Task<SubjectModels> AddSubject(SubjectModels subject, IFormFile photo)
         {
             var sj = _dbContext.Subjects.SingleOrDefault(a => a.Subject_Id.Equals(subject.Subject_Id));
             if (sj == null)
             {
+                if (photo != null && photo.Length > 0)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                    string filePath = Path.Combine(_uploadFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await photo.CopyToAsync(stream);
+                    }
+
+                    subject.Subject_Photo = "/uploads/" + fileName;
+                }
 
                 await _dbContext.Subjects.AddAsync(subject);
                 await _dbContext.SaveChangesAsync();
@@ -34,9 +49,17 @@ namespace WebAPI.Service
 
         public async Task<bool> DeleteSubject(string id)
         {
-            var cl = _dbContext.Subjects.FindAsync(id);
+            SubjectModels cl = await _dbContext.Subjects.FindAsync(id);
             if (cl != null)
             {
+                if (!string.IsNullOrEmpty(cl.Subject_Id))
+                {
+                    string filePath = Path.Combine(_uploadFolder, cl.Subject_Id);
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
                 _dbContext.Remove(cl);
                 await _dbContext.SaveChangesAsync();
                 return true;
@@ -62,21 +85,42 @@ namespace WebAPI.Service
             return await _dbContext.Subjects.ToListAsync();
         }
 
-        public async Task<SubjectModels> UpdateSubject(SubjectModels subject)
+        public async Task<SubjectModels> UpdateSubject(SubjectModels subject, IFormFile photo)
         {
             SubjectModels cl = await _dbContext.Subjects.FindAsync(subject.Subject_Id);
-            if (cl != null)
+            if (photo != null && photo.Length > 0)
             {
+                if (!string.IsNullOrEmpty(cl.Subject_Photo))
+                {
+                    string filePathUpdate = Path.Combine(_uploadFolder, cl.Subject_Photo);
+                    if (File.Exists(filePathUpdate))
+                    {
+                        File.Delete(filePathUpdate);
+                    }
+                }
+                // generate new unique file name 
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                string filePath = Path.Combine(_uploadFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                subject.Subject_Photo = "/uploads/" + fileName;
 
                 _dbContext.Entry(subject).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
 
-                return cl;
+                return subject;
             }
             else
             {
-                return null;
+                subject.Subject_Photo = cl.Subject_Photo;
+                _dbContext.Entry(subject).State = EntityState.Modified;
 
+                await _dbContext.SaveChangesAsync();
+                return subject;
             }
         }
 

@@ -41,15 +41,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ClassModel> PostClass(ClassModel Class)
+        public async Task<ClassModel> PostClass([FromForm] ClassModel Class, IFormFile photo)
         {
-            return await ClassRepository.AddClassModel(Class);
+            return await ClassRepository.AddClassModel(Class,photo);
         }
 
         [HttpPut("{id}")]
-        public async Task<ClassModel> UpdateClass(ClassModel Class)
+        public async Task<ClassModel> UpdateClass([FromForm] ClassModel Class, IFormFile photo)
         {
-            return await ClassRepository.UpdateClassModel(Class);
+            return await ClassRepository.UpdateClassModel(Class, photo);
         }
 
     }

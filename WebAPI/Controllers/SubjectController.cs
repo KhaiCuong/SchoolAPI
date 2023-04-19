@@ -39,15 +39,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<SubjectModels> PostSubject(SubjectModels Subject)
+        public async Task<SubjectModels> PostSubject([FromForm] SubjectModels Subject, IFormFile photo)
         {
-            return await SubjectRepository.AddSubject(Subject);
+            return await SubjectRepository.AddSubject(Subject, photo);
         }
 
         [HttpPut("{id}")]
-        public async Task<SubjectModels> UpdateSubject(SubjectModels Subject)
+        public async Task<SubjectModels> UpdateSubject([FromForm] SubjectModels Subject, IFormFile photo)
         {
-            return await SubjectRepository.UpdateSubject(Subject);
+            return await SubjectRepository.UpdateSubject(Subject,photo);
         }
 
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
+using WebAPI.IFile;
 using WebAPI.Repository;
 using WebAPI.Service;
 
@@ -25,7 +26,8 @@ builder.Services.AddScoped<IClassRepository, CLassImpService>();
 builder.Services.AddScoped<ICourseRepository, CourseImpService>();
 builder.Services.AddScoped<IStudentRepository, StudentServiceImp>();
 builder.Services.AddScoped<ISubjectRepository, SubjectServiceImp>();
-builder.Services.AddScoped<ITeacherRepository, TeacherImpService>();
+builder.Services.AddScoped<ITeacherRepository, TeacherImpService>(); 
+builder.Services.AddScoped<IFileService, FileServiceImp>();
 
 var app = builder.Build();
 
