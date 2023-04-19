@@ -1,0 +1,40 @@
+﻿@using ModelLib.Model;
+@model IEnumerable<ModelLib.Model.StudentModel>
+@{
+    TempData["title"] = "list Student";
+}
+@if (ViewBag.Message != null)
+{
+    foreach (var item in @ViewBag.Message)
+    {
+        <div class="alert alert-danger">
+            @item
+        </div>
+    }
+
+}
+@await Html.PartialAsync("Create",new StudentModel())
+@*<partial name="_CreateProduct" model="new Product()"/>*@
+
+<h1>List Of Student</h1>
+
+<table class="table table-hover">
+    <tr>
+        <th>Student_Id </th>
+        <th>Student_Name </th>
+        <th>Score</th>
+        <th>Class_Id</th>
+        <th>Action</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Student_Id </td>
+            <td>@item.Student_Name</td>
+            <td>@item.Score</td>
+            <td>@item.Class_Id</td>
+            <td><a class="btn btn-warning" asp-route-id="@item.Student_Id" asp-action="Edit">Edit</a></td>
+            <td><a asp-route-id="@item.Student_Id" class="btn btn-danger" asp-action="Delete">Delete</a></td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ModelLib.Model.TeacherModel;>
+@{
+    TempData["title"] = "List of Teacher";
+}
+
+@if (ViewBag.Message != null)
+{
+    foreach (var item in ViewBag.Message)
+    {
+        <div class="alert alert-danger"> @item </div>
+    }
+}
+
+
+<div class="d-flex align-items-center justify-content-between">
+
+        <h1>List Of Teacher </h1>
+
+       <a class="btn-primary btn" asp-action="Create">Create</a><
+
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @*<a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]" class="text-decoration-none">
+                    @Html.DisplayNameFor(model => model.Teacher_Id)
+                </a>*@
+                Teacher_Id
+            </th>
+            <th>Teacher_Name</th>
+       @*     <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["QuantitySortParm"]" class="text-decoration-none">
+                    @Html.DisplayNameFor(model => model.Subject_Id)
+                </a>
+            </th>*@
+   
+            <th colspan="2">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Teacher_Id</td>
+                <td>@item.Teacher_Name</td>
+           @*     <td>@item.Subject_Id</td>*@
+
+                 <td>
+                   <a class="btn-warning btn " asp-route-id="@item.Teacher_Id" asp-action="Edit">  Edit  </a>
+                @*   @Html.ActionLink("Delete","Delete","Class",new{ID=item.Teacher_Id},
+                   new{onclick="return confirm('Are you sure to delete?')",@class="btn btn-danger"})*@
+
+                </td>
+            </tr>
+@*            @await Html.PartialAsync("_DetailPartialView",item)
+*@      }
+    </tbody>
+</table>
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+﻿@model ModelLib.Model.TeacherModel;
+
+
+@{
+    TempData["title"] = "Edit a Teacher ";
+}
+
+@if (ViewBag.Message != null)
+{
+    foreach (var item in ViewBag.Message)
+    {
+        <div class="alert alert-danger"> @item </div>
+    }
+}
+
+
+<form action="Edit" enctype="multipart/form-data" method="post" class="w-75 m-auto" style="height: 1000px">
+
+    <h2 class="mt-4 mb-5">Edit Teacher</h2>
+    <input asp-for="Teacher_Id" type="hidden" />
+
+    <div class="form-group">
+        <label> Teacher Id </label>
+        <input asp-for="Teacher_Id" class="form-control" type="text" disabled />
+    </div>
+
+
+    <div Teacher="form-group">
+        <label>Teacher Name</label>
+        <input asp-for="Teacher_Name" type="text" class="form-control" />
+        <span asp-validation-for="Teacher_Name" class="text-danger"></span>
+    </div>
+
+
+
+    <div Teacher="form-group">
+        <label> Teacher Email </label>
+        <input asp-for="Teacher_Email" type="text" class="form-control" />
+        <span asp-validation-for="Teacher_Email" class="text-danger"></span>
+    </div>
+
+
+
+    <div>
+        <input name="Edit" type="submit" class="btn btn-primary mt-5" />
+
+    </div>
+</form>

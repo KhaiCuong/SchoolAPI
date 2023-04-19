@@ -1,0 +1,55 @@
+﻿@model ModelLib.Model.ClassModel
+<!-- Button to Open the Modal -->
+
+
+<!-- The Modal -->
+<div class="modal" id="myModalDetail_@Model.Class_Id">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Detail Account</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <dl class="d-lg-inline">
+                    <dt>
+                        @Html.DisplayNameFor(a=>a.Class_Id)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(a=>a.Class_Id)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(a=>a.Class_Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(a=>a.Class_Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(a=>a.Quantity)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(a=>a.Quantity)
+                    </dd>
+                   @* <dt>
+                        @Html.DisplayNameFor(a=>a.IsAdmin)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(a=>a.IsAdmin)
+                    </dd>*@
+                  
+                  
+                </dl>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

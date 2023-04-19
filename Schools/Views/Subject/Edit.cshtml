@@ -1,0 +1,80 @@
+﻿@model ModelLib.Model.SubjectModels
+@{
+    TempData["title"] = "Edit Subject ";
+}
+
+@if (ViewBag.Message != null)
+{
+    foreach (var item in ViewBag.Message)
+    {
+        <div class="alert alert-danger"> @item </div>
+    }
+}
+
+
+
+<h1>Edit Subject</h1>
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <input asp-for="Subject_Id" type="hidden" />
+    <div class="form-group">
+        <label>Subject_Id</label>
+        <input asp-for="Subject_Id" type="text" class="form-control" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Subject_Name</label>
+        <input asp-for="Subject_Name" type="text" class="form-control" />
+    </div>
+
+    <div cclass="form-group">
+        <label asp-for="Learn_time"></label>
+        <input asp-for="Learn_time" type="number" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Subject_Photo</label>
+        <input name="fileUploadxx" type="file" class="form-control" />
+    </div>
+    <div class="form-group">
+        <img src="~/@Model.Subject_Photo" width="100" class="img-thumbnail" class="form-control" />
+    </div>
+
+  @*  @* Course table
+ <div class="form-group">
+        <label>Class_id</label>
+        <select name="Class_id" id="Class_id" class="form-control">
+            @if (ViewBag.CourseSJandCL != null)
+            {
+                foreach (var item in ViewBag.CourseSJandCL)
+                {
+                    <option value="@item">@item</option>
+                }
+            }
+            else
+            {
+                <option value="#">Khong co gia tri</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Teacher_id</label>
+        <select name="Teacher_id" id="Teacher_id" class="form-control">
+            @if (ViewBag.CourseSJandT != null)
+            {
+                foreach (var item in ViewBag.CourseSJandT)
+                {
+                    <option value="@item">@item</option>
+                }
+            }
+            else
+            {
+                <option value="#">Khong co gia tri</option>
+            }
+        </select>
+    </div>
+    @* Course table*@
+
+    <input name="Edit" type="submit" class="btn btn-primary" />
+
+</form>

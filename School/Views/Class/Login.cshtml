@@ -1,0 +1,33 @@
+﻿@*@model ModelLib.Model.ClassModel
+
+@{
+    TempData["title"] = "Login ";
+}
+
+@if (ViewBag.Message != null)
+{
+    foreach (var item in ViewBag.Message)
+    {
+        <div class="alert alert-danger"> @item </div>
+    }
+}
+
+<form action="Login" enctype="multipart/form-data" method="post" class="w-75 m-auto ">
+
+    <h2 class="mt-4 mb-5">Login</h2>
+   
+    <div class="form-group">
+        <label> Class Id </label>
+        <input asp-for="Class_Id" class="form-control" name="user" type="text"  />
+    </div>
+
+    <div class="form-group">
+        <label> Password </label>
+        <input asp-for="Password" type="text" name="pass" class="form-control" />
+    </div>
+
+    <div>
+        <input name="Login" type="submit" value="Login" class="btn btn-primary mt-5" />
+    </div>
+</form>
+*@
